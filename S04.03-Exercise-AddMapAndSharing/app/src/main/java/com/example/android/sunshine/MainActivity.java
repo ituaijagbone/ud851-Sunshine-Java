@@ -23,7 +23,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -222,7 +221,24 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapterOn
         }
 
         // TODO (2) Launch the map when the map menu item is clicked
-
+        if (id == R.id.action_open_map) {
+            openMap();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void openMap() {
+        String location = SunshinePreferences.getPreferredWeatherLocation(this);
+        Uri.Builder uriBuilder = new Uri.Builder();
+        Uri address = uriBuilder.scheme("geo")
+                .path("0,0")
+                .query(location)
+                .build();
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(address);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 }
